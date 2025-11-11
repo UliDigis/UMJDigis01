@@ -1,13 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.JPA;
 
-/**
- *
- * @author digis
- */
 public class Direccion {
+
+    private int IdDireccion;
+    private String Calle;
+    private String NumeroInterior;
+    private String NumeroExterior;
+    public Usuario usuario;
+    public Colonia colonia;
     
+
 }
