@@ -7,8 +7,8 @@ public class Rol {
 
 private int IdRol;
 
-@NotBlank(message = "El nombre del Rol es obligatorio.")
-@Size(max = 50, message = "El nombre del rol es demasiado largo.")
+//@NotBlank(message = "El nombre del Rol es obligatorio.")
+//@Size(max = 50, message = "El nombre del rol es demasiado largo.")
 private String Nombre;
 public Usuario usuario;
 

@@ -16,10 +16,32 @@ public class Colonia {
     @Size(max=10, message = "El codigo postal es demasiado largo.")
     private String CodigoPostal;
     
+    private String NumeroInterior;
+    
+    private String NumeroExterior;
+    
     @Valid
     @NotBlank(message = "El municipio (y sus datos) son obligatorios")
     public Municipio municipio;
 
+    public String getNumeroInterior() {
+        return NumeroInterior;
+    }
+
+    public void setNumeroInterior(String NumeroInterior) {
+        this.NumeroInterior = NumeroInterior;
+    }
+
+    public String getNumeroExterior() {
+        return NumeroExterior;
+    }
+
+    public void setNumeroExterior(String NumeroExterior) {
+        this.NumeroExterior = NumeroExterior;
+    }
+
+    
+    
     public int getIdColonia() {
         return IdColonia;
     }

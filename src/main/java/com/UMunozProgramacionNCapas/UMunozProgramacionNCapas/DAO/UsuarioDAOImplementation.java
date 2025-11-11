@@ -27,41 +27,42 @@ public class UsuarioDAOImplementation implements IUsuarioDAO {
     @Autowired
     public JdbcTemplate jdbcTemplate;
 
-    
-    
     @Transactional
+    @Override
     public Result CargaMasiva(List<Usuario> usuarios) {
         Result result = new Result();
 
-        String sql = "INSERT INTO Usuario (UserName, Nombre, ApellidoPaterno, ApellidoMaterno, "
-                + "Email, Password, FechaNacimiento, Sexo, Telefono, Celular, CURP, Imagen) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            jdbcTemplate.batchUpdate("{CALL AddUsuario2(?,?,?,?,?,?,?,?,?,?,?,?)}",
+                    usuarios, usuarios.size(), (callableSP, usuario) -> {
 
-        jdbcTemplate.batchUpdate(sql, usuarios, usuarios.size(),
-                (ps, u) -> {
-                    ps.setString(1, u.getUserName());
-                    ps.setString(2, u.getNombre());
-                    ps.setString(3, u.getApellidoPaterno());
-                    ps.setString(4, u.getApellidoMaterno());
-                    ps.setString(5, u.getEmail());
-                    ps.setString(6, u.getPassword());
-                    ps.setDate(7, new java.sql.Date(u.getFechaNacimiento().getTime()));
-                    ps.setString(8, String.valueOf(u.getSexo()));
-                    ps.setString(9, u.getTelefono());
-                    ps.setString(10, u.getCelular());
-                    ps.setString(11, u.getCURP());
-                    ps.setString(12, u.getImagen());
-                }
-        );
+                //usuario.setRol(new Rol());
 
-        result.Correct = true;
+                callableSP.setString(1, usuario.getUserName());
+                callableSP.setString(2, usuario.getNombre());
+                callableSP.setString(3, usuario.getApellidoPaterno());
+                callableSP.setString(4, usuario.getApellidoMaterno());
+                callableSP.setString(5, usuario.getEmail());
+                callableSP.setString(6, usuario.getPassword());
+                callableSP.setDate(7, new java.sql.Date(usuario.getFechaNacimiento().getTime()));
+                callableSP.setString(8, Character.toString(usuario.getSexo()));
+                callableSP.setString(9, usuario.getTelefono());
+                callableSP.setString(10, usuario.getCelular());
+                callableSP.setString(11, usuario.getCURP());
+                callableSP.setInt(12, usuario.getRol().getIdRol());
+                
+
+            });
+
+            result.Correct = true;
+        } catch (Exception ex) {
+            result.Correct = false;
+            result.ErrorMessage = ex.getLocalizedMessage();
+            result.ex = ex;
+        }
         return result;
     }
 
-
-    
-    
-    
     @Override
     public Result Add(Usuario usuario) {
 

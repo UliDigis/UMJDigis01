@@ -11,12 +11,14 @@ import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Direccion;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.ErrorCarga;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Municipio;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Result;
+import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Rol;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Usuario;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.Service.ValidationService;
 import jakarta.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
@@ -201,14 +203,44 @@ public class UsuarioController {
     }
 
     @GetMapping("/CargaMasiva/Procesando")
-    public String CargaMasiva(HttpSession session) {
-        String path = session.getAttribute("archivoCargaMasiva").toString();
-        session.removeAttribute("archivoCargaMasiva");
+    public String CargaMasiva(HttpSession session, Model model) {
+        
+        Object pathObj = session.getAttribute("archivoCargaMasiva");
+        if(pathObj == null){
+            model.addAttribute("error", "No se encontro el archivo para el archivo para procesar.");
+             return "CargaMasiva";
+             }
+        String path = pathObj.toString();
+        
+        try {
+        List<Usuario> usuarios = new ArrayList<>();
+        if (path.endsWith(".txt")) {
+            usuarios = LecturaArchivoTXT(new File(path));
+        } else if (path.endsWith(".xlsx")) {
+            usuarios = LecturaArchivoXLSX(new File(path));
+        } else {
+            model.addAttribute("error", "El formato del archivo no es compatible.");
+            return "CargaMasiva";
+        }
+         Result result = usuarioDAOImplementation.CargaMasiva(usuarios);
+         
+            if (result.Correct) {
+                model.addAttribute("mensaje", "Carga masiva resalizado correctamente");
+                model.addAttribute("usuariosIngresados", usuarios);
+            }else{
+                 model.addAttribute("error", "Error al procesar usuarios: " + result.ErrorMessage);
+            }
+         
+        }catch(Exception ex){
+        
+        }finally{
+            session.removeAttribute("archivoCargaMasiva");
+        }
         return "CargaMasiva";
     }
 
     @PostMapping("/CargaMasiva")
-    public String CargaMasiva(@RequestParam("archivo") MultipartFile archivo, Model model, HttpSession session) {
+    public String CargaMasiva(@RequestParam("archivo") MultipartFile archivo, Model model, HttpSession session) throws IOException{
         String nombreArchivo = archivo.getOriginalFilename();
         if (nombreArchivo == null || !nombreArchivo.contains(".")) {
             model.addAttribute("error", "Extencion del archivo inválido");
@@ -246,7 +278,7 @@ public class UsuarioController {
 
             if (errores.isEmpty()) {
                 model.addAttribute("sinErrores", true);
-                model.addAttribute("archivoCargaMasiva", pathDefinitivo);
+                session.setAttribute("archivoCargaMasiva", pathDefinitivo);
             } else {
                 model.addAttribute("sinErrores", false);
                 model.addAttribute("listaErrores", errores);
@@ -322,7 +354,7 @@ public class UsuarioController {
 
             for (Row row : workSheet) {
                 Usuario usuario = new Usuario();
-
+                usuario.setRol(new Rol());
                 usuario.setUserName(row.getCell(0).toString());
                 usuario.setNombre(row.getCell(1).toString());
                 usuario.setApellidoPaterno(row.getCell(2).toString());
@@ -334,8 +366,8 @@ public class UsuarioController {
                 usuario.setTelefono(row.getCell(8).toString());
                 usuario.setCelular(row.getCell(9).toString());
                 usuario.setCURP(row.getCell(10).toString());
-                usuario.setImagen(row.getCell(11).toString());
-
+                usuario.getRol().setIdRol((int)row.getCell(11).getNumericCellValue());
+                
                 usuarios.add(usuario);
             }
 

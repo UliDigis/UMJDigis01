@@ -34,7 +34,7 @@
                     <hr class="mb-4">
 
                     <div id="formularioArchivo" style="display: none;">
-                        <form th:action="@{CargaMasiva}" method="post" enctype="multipart/form-data">
+                        <form th:action="@{/Usuario/CargaMasiva}" method="post" enctype="multipart/form-data">
                             <label for="archivo" class="form-label fw-bold mb-3" id="lblArchivo">Subir archivo:</label>
                             <input type="file" id="archivo" name="archivo" class="form-control form-control-lg mb-4" accept=".txt,.xlsx" required>
 
