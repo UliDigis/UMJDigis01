@@ -21,8 +21,10 @@ public class Colonia {
     @Column(name = "nombre", nullable = false, unique = false)
     private String Nombre;
     
-    
+    @Column(name = "codigopostal", nullable = false, unique = true)
     private String CodigoPostal;
+    
+    @JoinColumn(name = "idmunicipio", nullable = false)
     private Municipio municipio;
     
 
