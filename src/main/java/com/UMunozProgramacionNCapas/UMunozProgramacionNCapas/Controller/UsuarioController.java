@@ -6,6 +6,7 @@ import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.MunicipioDAOImp
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.PaisDAOImplementation;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.RolDAOImplementation;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.UsuarioDAOImplementation;
+import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.UsuarioJPADAOImplementation;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Colonia;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Direccion;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.ErrorCarga;
@@ -70,6 +71,9 @@ public class UsuarioController {
 
     @Autowired
     private RolDAOImplementation rolDAOImplementation;
+    
+    @Autowired
+    private UsuarioJPADAOImplementation usuarioJPADAOImplementation;
 
     // --------- IdUsuario ----------
     @GetMapping("detail/{idUsuario}")
@@ -179,10 +183,11 @@ public class UsuarioController {
     // --------- GetAll Usuario -----------
     @GetMapping("/GetAll")
     public String GetAll(Model model) {
-        Result result = usuarioDAOImplementation.GetAll();
+//        Result result = usuarioDAOImplementation.GetAll();
         Result resultRol = rolDAOImplementation.GetAll();
+        Result resultJPA = usuarioJPADAOImplementation.GetAllJPA();
         model.addAttribute("roles", resultRol.Objects);
-        model.addAttribute("usuarios", result.Objects);
+        model.addAttribute("usuarios", resultJPA.Objects);
         model.addAttribute("usuarioBusqueda", new Usuario());
         return "index";
     }
