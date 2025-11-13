@@ -151,7 +151,7 @@ public class UsuarioController {
 
     // POST
     @PostMapping("/add")
-    public String Add(@ModelAttribute Usuario usuario,
+    public String Add(@ModelAttribute("Usuario") Usuario usuario,
             @RequestParam("imagenFiel") MultipartFile imagenFile, Model model) {
 
         if (imagenFile != null) {

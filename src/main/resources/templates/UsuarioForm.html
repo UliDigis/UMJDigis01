@@ -89,7 +89,7 @@
                                 <label for="celular" class="form-label">Celular</label>
                                 <input type="tel" class="form-control" id="celular" maxlength="10" th:field="*{Celular}" placeholder="Ej: 5587654321">
                             </div>
-                            <div class="col-md-3 col-sm-6">
+                            <div class="col-md-3 col-sm-4">
                                 <label for="pNombreRol" class="form-label">Rol</label>
                                 <select class="form-select" id="pNombreRol" th:field="*{Rol.idRol}">
                                     <option value="0" selected>Selecciona un Rol</option>
@@ -107,17 +107,17 @@
                         <div class="row mb-4 g-4">
                             <div class="col-md-3">
                                 <label for="calle" class="form-label">Calle</label>
-                                <input type="text" class="form-control" id="calle" name="calle" placeholder="Nombre de la calle">
+                                <input type="text" class="form-control" id="calle" th:field="*{Direcciones[0].Calle}" name="calle" placeholder="Nombre de la calle">
                             </div>
 
                             <div class="col-md-3">
                                 <label for="numeroExterior" class="form-label">Número Exterior</label>
-                                <input type="text" class="form-control" id="numeroExterior" name="numeroExterior" placeholder="Ej: 45">
+                                <input type="text" class="form-control" th:field="*{Direcciones[0].NumeroExterior}" id="numeroExterior" name="numeroExterior" placeholder="Ej: 45">
                             </div>
 
                             <div class="col-md-3">
                                 <label for="numeroInterior" class="form-label">Número Interior</label>
-                                <input type="text" class="form-control" id="numeroInterior" name="numeroInterior" placeholder="Ej: B">
+                                <input type="text" class="form-control" th:field="*{Direcciones[0].NumeroInterior}" id="numeroInterior" name="numeroInterior" placeholder="Ej: B">
                             </div>
 
                             <div class="col-md-3">
@@ -134,28 +134,28 @@
 
                             <div class="col-md-3">
                                 <label class="form-label">Estado</label>
-                                <select id="ddlEstado" class="form-select">
+                                <select id="ddlEstado" th:field ="*{Direcciones[0].Colonia.Municipio.Estado.IdEstado}" class="form-select">
                                     <option value=0 selected>Selecciona algun Estado</option>
                                 </select>
                             </div>
 
                             <div class="col-md-3">
                                 <label class="form-label">Municipio</label>
-                                <select id="ddlMunicipio" class="form-select">
+                                <select id="ddlMunicipio" th:field ="*{Direcciones[0].Colonia.Municipio.IdMunicipio}" class="form-select">
                                     <option value=0 selected>Selecciona algun Municipio</option>
                                 </select></div>
 
 
                             <div class="col-md-3">
                                 <label for="colonia" class="form-label">Colonia</label>
-                                <select class="form-select" id="ddlColonia">
+                                <select class="form-select" th:field ="*{Direcciones[0].Colonia.IdColonia}" id="ddlColonia">
                                     <option value="0" selected>Seleccione una Colonia</option>
                                 </select>
                             </div>
 
                             <div class="col-md-3">
-                                <label for="CodigoPostal" class="form-label">Codigo Postals</label>
-                                <select class="form-select" id="ddlCodigoPostal">
+                                <label for="CodigoPostal" class="form-label">Codigo Postal</label>
+                                <select class="form-select" th:field ="*{Direcciones[0].Colonia.CodigoPostal}" id="ddlCodigoPostal">
                                     <option value="0" selected>Seleccione un Codigo Postal</option>
                                 </select>
                             </div>

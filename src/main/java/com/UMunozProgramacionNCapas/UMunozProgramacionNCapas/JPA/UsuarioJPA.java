@@ -16,6 +16,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.Date;
 import java.util.List;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "usuario")
@@ -43,7 +44,8 @@ public class UsuarioJPA {
 
     @Column(name = "password", nullable = false, unique = false, length = 50)
     private String Password;
-
+    
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "fechanacimiento", nullable = false, unique = false)
     private Date FechaNacimiento;
 
@@ -67,7 +69,7 @@ public class UsuarioJPA {
     @JoinColumn(name = "idrol", nullable = false)
     public RolJPA rol;
 
-   @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<DireccionJPA> Direcciones;
 
     public int getIdUsuario() {
@@ -130,7 +132,7 @@ public class UsuarioJPA {
         return FechaNacimiento;
     }
 
-    public void setFehcaNacimiento(Date FechaNacimiento) {
+    public void setFechaNacimiento(Date FechaNacimiento) {
         this.FechaNacimiento = FechaNacimiento;
     }
 
