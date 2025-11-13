@@ -5,21 +5,11 @@ import jakarta.validation.constraints.Size;
 
 public class Rol {
 
-private int IdRol;
+    private int IdRol;
 
 //@NotBlank(message = "El nombre del Rol es obligatorio.")
 //@Size(max = 50, message = "El nombre del rol es demasiado largo.")
-private String Nombre;
-public Usuario usuario;
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
+    private String Nombre;
 
     public int getIdRol() {
         return IdRol;
@@ -37,6 +27,4 @@ public Usuario usuario;
         this.Nombre = Nombre;
     }
 
-
-    
 }

@@ -1,5 +1,6 @@
 package com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -45,7 +46,7 @@ public class Usuario {
     private String Celular;
 
     @NotBlank(message = "El CURP es Obligatorio.")
-    @Pattern(regexp = "[A-Z]{4}[0-9]{6}[H|M][A-Z]{5}[0-9]{2}", message = "Formato de CURP invalido ")
+//    @Pattern(regexp = "[A-Z]{4}[0-9]{6}[H|M][A-Z]{5}[0-9]{2}", message = "Formato de CURP invalido ")
     private String CURP;
 
     private String Imagen;

@@ -81,6 +81,7 @@
                                 <th scope="col">Usuario</th>
                                 <th scope="col">Información de Contacto</th>
                                 <th scope="col">Dirección</th>
+                                <th scope="col">Rol</th>
                                 <th scope="col" class="text-center">Acciones</th>
                             </tr>
                         </thead>
@@ -125,6 +126,10 @@
                                             País: <span th:text="${direccion.colonia.municipio.estado.pais.Nombre}">País</span>
                                         </small>
                                     </div>
+                                </td>
+                                
+                                <td>
+                                    <div><i class="bi bi-clipboard me-1"></i> Rol: <span th:text="${usuario.Rol.Nombre}"></span></div>
                                 </td>
 
                                 <td>

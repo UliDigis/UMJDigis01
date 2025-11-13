@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.query.internal.QueryOptionsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -55,6 +56,56 @@ public class UsuarioJPADAOImplementation implements IUsuarioJPA {
             result.ex = ex;
         }
 
+        return result;
+    }
+    
+    @Override
+    public Result AddUsuarioJPA(Usuario usuario){
+        
+        Result result = new Result();
+        
+        try{
+            UsuarioJPA usuarioJPA = usuarioMapper.toEntity(usuario);
+            
+            entityManager.persist(usuarioJPA);
+            entityManager.flush();
+            
+            result.Correct = true;
+            result.Object = usuarioJPA.getIdUsuario();
+            
+        }catch(Exception ex){
+            result.Correct = false;
+            result.ErrorMessage = ex.getLocalizedMessage();
+            result.ex = ex;
+            
+        }
+        
+        
+     return result;   
+    }
+    
+    @Override
+    public Result GetById(int IdUsuario){
+        Result result = new Result();
+        
+        try{
+            TypedQuery<UsuarioJPA> query = entityManager.createQuery("FROM UsuarioJPA u WHERE u.IdUsuario = :IdUsuario",UsuarioJPA.class);
+            query.setParameter("IdUsuario",IdUsuario);
+            
+            UsuarioJPA usuarioJPA = query.getSingleResult();
+            
+            Usuario usuario = usuarioMapper.toModel(usuarioJPA);
+            
+            result.Object = (usuario);
+            result.Correct = true;
+            
+            
+        }catch(Exception ex){
+            result.Correct = false;
+            result.ErrorMessage=ex.getMessage();
+            result.ex=ex;
+        }
+        
         return result;
     }
 }

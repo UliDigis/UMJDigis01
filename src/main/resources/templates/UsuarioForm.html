@@ -4,7 +4,7 @@
       layout:decorate="~{layout}">
     <head>
         <title>Ingresar Nuevo Usuario</title>
-       </head>
+    </head>
     <body class="bg-light">
 
         <div class="container my-5" layout:fragment="contenido">
@@ -16,7 +16,7 @@
                 <div class="card-body p-4">
                     <form th:object="${Usuario}" th:action="@{add}" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
 
-                        <!-- DATOS DE CUENTA  -->
+
                         <h5 class="mb-3 text-secondary"><i class="bi bi-key-fill me-2"></i>Datos de Cuenta</h5>
                         <div class="row mb-4 g-3">
                             <div class="col-lg-3 col-md-4">
@@ -40,7 +40,7 @@
 
                         <hr>
 
-                        <!-- INFORMACIÓN PERSONAL  -->
+
                         <h5 class="mb-3 text-secondary"><i class="bi bi-person-badge-fill me-2"></i>Información Personal</h5>
                         <div class="row mb-4 g-3">
                             <div class="col-md-4">
@@ -78,22 +78,29 @@
 
                         <hr>
 
-                        <!-- INFORMACIÓN DE CONTACTO  -->
+
                         <h5 class="mb-3 text-secondary"><i class="bi bi-phone-vibrate-fill me-2"></i>Información de Contacto</h5>
                         <div class="row mb-5 g-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="telefono" class="form-label">Teléfono</label>
                                 <input type="tel" class="form-control" id="telefono" maxlength="10" th:field="*{Telefono}" placeholder="Ej: 5551234567">
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="celular" class="form-label">Celular</label>
                                 <input type="tel" class="form-control" id="celular" maxlength="10" th:field="*{Celular}" placeholder="Ej: 5587654321">
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <label for="pNombreRol" class="form-label">Rol</label>
+                                <select class="form-control" id="pNombreRol" th:field="*{Rol.idRol}">
+                                    <option value="0" selected>Selecciona un Rol</option>
+                                    <option th:each="rol : ${roles}" th:value="${rol.idRol}" th:text="${rol.nombre}"></option>
+                                </select>
                             </div>
                         </div>
 
                         <hr>
 
-                        <!-- DIRECCIÓN  -->
+
                         <hr>
                         <h5 class="mb-3 text-secondary"><i class="bi bi-geo-alt-fill me-2"></i>Dirección</h5>
 
@@ -114,41 +121,45 @@
                             </div>
 
                             <div class="col-md-3">
-                                <label for="CodigoPostal" class="form-label">Codigo Postals</label>
-                                <select class="form-select" id="ddlCodigoPostal">
-                                    <option value="0" selected>Seleccione un Codigo Postal</option>
+                                <label class="form-label">País</label>
+                                <select id="ddlPais" class="form-select" th:field="*{Direcciones[0].Colonia.Municipio.Estado.Pais.IdPais}" >
+                                    <option value=0 selected>Selecciona algun Pais</option>
+                                    <option th:each="pais : ${Paises}" th:value="${pais.IdPais}" th:text="${pais.Nombre}"></option>
                                 </select>
                             </div>
-
 
                         </div>
 
                         <div class="row mb-4 g-3">
-                            <div class="col-md-3">
-                                <label for="colonia" class="form-label">Colonia</label>
-                                <select class="form-select" id="ddlColonia">
-                                    <option value="0" selected>Seleccione una Colonia</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Municipio</label>
-                                <select id="ddlMunicipio" class="form-select">
-                                    <option value=0 selected>Selecciona algun Municipio</option>
-                                </select></div>
+
                             <div class="col-md-3">
                                 <label class="form-label">Estado</label>
                                 <select id="ddlEstado" class="form-select">
                                     <option value=0 selected>Selecciona algun Estado</option>
                                 </select>
                             </div>
+
                             <div class="col-md-3">
-                                <label class="form-label">País</label>
-                                <!--                                <input type="text" class="form-control" id="pais" name="pais" disabled>-->
-                                <select id="ddlPais" class="form-select" th:field="*{Direcciones[0].Colonia.Municipio.Estado.Pais.IdPais}" >
-                                    <option value=0 selected>Selecciona algun Pais</option>
-                                    <option th:each="pais : ${Paises}" th:value="${pais.IdPais}" th:text="${pais.Nombre}"></option>
+                                <label class="form-label">Municipio</label>
+                                <select id="ddlMunicipio" class="form-select">
+                                    <option value=0 selected>Selecciona algun Municipio</option>
+                                </select></div>
+
+
+                            <div class="col-md-3">
+                                <label for="colonia" class="form-label">Colonia</label>
+                                <select class="form-select" id="ddlColonia">
+                                    <option value="0" selected>Seleccione una Colonia</option>
                                 </select>
                             </div>
+
+                            <div class="col-md-3">
+                                <label for="CodigoPostal" class="form-label">Codigo Postals</label>
+                                <select class="form-select" id="ddlCodigoPostal">
+                                    <option value="0" selected>Seleccione un Codigo Postal</option>
+                                </select>
+                            </div>
+
                         </div>
 
 

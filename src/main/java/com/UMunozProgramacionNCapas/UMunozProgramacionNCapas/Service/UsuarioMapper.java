@@ -9,25 +9,26 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UsuarioMapper {
-    
+
     @Autowired
     private ModelMapper modelMapper;
-    
-    
+
     //ML aJPA
-    public Usuario toModel(UsuarioJPA usuarioJPA){
-        
-        try{
-        return modelMapper.map(usuarioJPA, Usuario.class); 
-        }catch(Exception ex){
-            System.out.println(ex.getMessage());
+    public Usuario toModel(UsuarioJPA usuarioJPA) {
+
+        try {
+                return modelMapper.map(usuarioJPA, Usuario.class);
+        } catch (Exception ex) {
+            Result result = new Result();
+            result.ErrorMessage = ex.getLocalizedMessage();
+            result.ex = ex;
+        }
+        return null;
     }
-    return null;
-}
+
     //ML a JPA
-    public UsuarioJPA toEntity(Usuario usuarioML){
+    public UsuarioJPA toEntity(Usuario usuarioML) {
         return modelMapper.map(usuarioML, UsuarioJPA.class);
     }
-    
-    
+
 }

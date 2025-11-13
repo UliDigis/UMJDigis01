@@ -13,7 +13,6 @@
             <h2 class="mb-5 text-center text-primary fw-bold">
                 <i class="bi bi-cloud-upload me-2"></i>Carga Masiva de Datos
             </h2>
-
             <div class="card shadow-lg mx-auto" style="max-width: 550px;">
                 <div class="card-body p-4 p-md-5">
                     <p class="text-muted mb-4 text-center">Seleccione el tipo de archivo para cargar:</p>
@@ -73,8 +72,25 @@
 
                 </div>
             </div>
+            <script th:if="${errorMessage}" th:inline="javascript">
+                Swal.fire({
+                title:  "¡Carga Fallida!",
+                        icon: "error",
+                        text: [[${errorMessage}]],
+                        confirmButtonText: "Entiendo"
+                });</script>
 
+            <script th:if="${successMessage}" th:inline="javascript">
+                Swal.fire({
+                title: "Operación Exitosa",
+                        icon: "success",
+                        text: [[${successMessage}]],
+                        confirmButtonText: "Ok"
+                });
+            </script>
         </div>
 
+
     </body>
+
 </html>

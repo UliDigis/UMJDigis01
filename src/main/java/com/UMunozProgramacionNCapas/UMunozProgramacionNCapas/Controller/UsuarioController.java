@@ -11,6 +11,8 @@ import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Colonia;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Direccion;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.ErrorCarga;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Municipio;
+import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Estado;
+import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Pais;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Result;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Rol;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Usuario;
@@ -19,9 +21,11 @@ import jakarta.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -46,6 +50,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("Usuario")
@@ -71,7 +76,7 @@ public class UsuarioController {
 
     @Autowired
     private RolDAOImplementation rolDAOImplementation;
-    
+
     @Autowired
     private UsuarioJPADAOImplementation usuarioJPADAOImplementation;
 
@@ -79,7 +84,7 @@ public class UsuarioController {
     @GetMapping("detail/{idUsuario}")
     public String Detail(@PathVariable("idUsuario") int IdUsuario, Model model) {
 
-        Result result = usuarioDAOImplementation.GetById(IdUsuario);
+        Result result = usuarioJPADAOImplementation.GetById(IdUsuario);
 
         model.addAttribute("usuario", result.Object);
 
@@ -134,9 +139,11 @@ public class UsuarioController {
         direccion.setColonia(colonia);
 
         usuario.setDirecciones(new ArrayList<>(Arrays.asList(direccion)));
-
+        Result resulRol = rolDAOImplementation.GetAll();
+        model.addAttribute("roles", resulRol.Objects);
         model.addAttribute("Paises", paisDAOImplementation.GetAll().Objects);
         model.addAttribute("Usuario", usuario);
+        
 
         return "UsuarioForm";
 
@@ -209,46 +216,46 @@ public class UsuarioController {
 
     @GetMapping("/CargaMasiva/Procesando")
     public String CargaMasiva(HttpSession session, Model model) {
-        
+
         Object pathObj = session.getAttribute("archivoCargaMasiva");
-        if(pathObj == null){
-            model.addAttribute("error", "No se encontro el archivo para el archivo para procesar.");
-             return "CargaMasiva";
-             }
-        String path = pathObj.toString();
-        
-        try {
-        List<Usuario> usuarios = new ArrayList<>();
-        if (path.endsWith(".txt")) {
-            usuarios = LecturaArchivoTXT(new File(path));
-        } else if (path.endsWith(".xlsx")) {
-            usuarios = LecturaArchivoXLSX(new File(path));
-        } else {
-            model.addAttribute("error", "El formato del archivo no es compatible.");
+        if (pathObj == null) {
+            model.addAttribute("errorMessage", "No se encontro el archivo para el archivo para procesar.");
             return "CargaMasiva";
         }
-         Result result = usuarioDAOImplementation.CargaMasiva(usuarios);
-         
-            if (result.Correct) {
-                model.addAttribute("mensaje", "Carga masiva resalizado correctamente");
-                model.addAttribute("usuariosIngresados", usuarios);
-            }else{
-                 model.addAttribute("error", "Error al procesar usuarios: " + result.ErrorMessage);
+        String path = pathObj.toString();
+
+        try {
+            List<Usuario> usuarios = new ArrayList<>();
+            if (path.endsWith(".txt")) {
+                usuarios = LecturaArchivoTXT(new File(path));
+            } else if (path.endsWith(".xlsx")) {
+                usuarios = LecturaArchivoXLSX(new File(path));
+            } else {
+                model.addAttribute("errorMessage", "El formato del archivo no es compatible.");
+                return "CargaMasiva";
             }
-         
-        }catch(Exception ex){
-        
-        }finally{
+            Result result = usuarioDAOImplementation.CargaMasiva(usuarios);
+
+            if (result.Correct) {
+                model.addAttribute("successMessage", "Carga masiva resalizado correctamente");
+                model.addAttribute("usuariosIngresados", usuarios);
+            } else {
+                model.addAttribute("errorMessage", "Error al procesar usuarios: " + result.ErrorMessage);
+            }
+
+        } catch (Exception ex) {
+
+        } finally {
             session.removeAttribute("archivoCargaMasiva");
         }
         return "CargaMasiva";
     }
 
     @PostMapping("/CargaMasiva")
-    public String CargaMasiva(@RequestParam("archivo") MultipartFile archivo, Model model, HttpSession session) throws IOException{
+    public String CargaMasiva(@RequestParam("archivo") MultipartFile archivo, Model model, HttpSession session) throws IOException {
         String nombreArchivo = archivo.getOriginalFilename();
         if (nombreArchivo == null || !nombreArchivo.contains(".")) {
-            model.addAttribute("error", "Extencion del archivo inválido");
+            model.addAttribute("errorMessage", "Extencion del archivo inválido");
             return "CargaMasiva";
         }
         String Extencion = archivo.getOriginalFilename().split("\\.")[1];
@@ -261,7 +268,7 @@ public class UsuarioController {
         try {
             archivo.transferTo(new File(pathDefinitivo));
         } catch (Exception ex) {
-            model.addAttribute("error", "Error en el archivo");
+            model.addAttribute("errorMessage", "Error en el archivo");
         }
 
         List<Usuario> usuarios = new ArrayList<>();
@@ -275,7 +282,7 @@ public class UsuarioController {
                 usuarios = LecturaArchivoXLSX(new File(pathDefinitivo));
 
             } else {
-                model.addAttribute("errorMessage", "Error por la extencion del archivo");
+                model.addAttribute("errorMessage", "Error por la extencion del archivo, no compatible.");
                 return "CargaMasiva";
             }
 
@@ -290,7 +297,7 @@ public class UsuarioController {
             }
 
         } catch (Exception ex) {
-            model.addAttribute("error", "Error al leer archivo");
+            model.addAttribute("errorMessage", "Error al leer archivo");
 
         }
         return "CargaMasiva";
@@ -322,38 +329,77 @@ public class UsuarioController {
     }
 
     //  ---------- Validaciones -------------
+    
     //  ---------- Lectura de Archivo -------------
     public List<Usuario> LecturaArchivoTXT(File archivo) {
-
         List<Usuario> usuarios = new ArrayList<>();
 
-        try (InputStream fileInputStream = new FileInputStream(archivo); BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));) {
-
-            String linea = "";
-
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
             while ((linea = bufferedReader.readLine()) != null) {
                 String[] campos = linea.split("\\|");
+
                 Usuario usuario = new Usuario();
                 usuario.setUserName(campos[0]);
                 usuario.setNombre(campos[1]);
                 usuario.setApellidoPaterno(campos[2]);
-                usuario.setEmail(campos[3]);
-                usuario.setPassword(campos[4]);
+                usuario.setApellidoMaterno(campos[3]);
+                usuario.setEmail(campos[4]);
+                usuario.setPassword(campos[5]);
+                usuario.setFechaNacimiento(formatoFecha.parse(campos[6]));
+                usuario.setSexo(campos[7].charAt(0));
+                usuario.setTelefono(campos[8]);
+                usuario.setCelular(campos[9]);
+                usuario.setCURP(campos[10]);
+                usuario.setImagen(campos[11]);
+
+                Rol rol = new Rol();
+                rol.setIdRol(Integer.parseInt(campos[12]));
+                usuario.setRol(rol);
+
+                Direccion direccion = new Direccion();
+                direccion.setCalle(campos[13]);
+                direccion.setNumeroInterior(campos[14]);
+                direccion.setNumeroExterior(campos[15]);
+
+                Colonia colonia = new Colonia();
+                colonia.setNombre(campos[16]);
+                colonia.setCodigoPostal(campos[17]);
+
+                Municipio municipio = new Municipio();
+                municipio.setNombre(campos[18]);
+
+                Estado estado = new Estado();
+                estado.setNombre(campos[19]);
+
+                Pais pais = new Pais();
+                pais.setNombre(campos[20]);
+
+                estado.setPais(pais);
+                municipio.setEstado(estado);
+                colonia.setMunicipio(municipio);
+                direccion.setColonia(colonia);
+                
+                usuario.setDirecciones(new ArrayList<>());
+                usuario.getDirecciones().add(direccion);
 
                 usuarios.add(usuario);
             }
         } catch (Exception ex) {
+            System.out.println(ex);
             return null;
         }
+
         return usuarios;
     }
-    //  ---------- Lectura de Archivo -------------
 
+//      ---------- Lectura de Archivo -------------
     //  ---------- Lectura de Archivo -------------
     private List<Usuario> LecturaArchivoXLSX(File archivo) {
 
         List<Usuario> usuarios = new ArrayList<>();
-
+        Result result = new Result();
         try (InputStream fileInputStream = new FileInputStream(archivo); XSSFWorkbook workBook = new XSSFWorkbook(fileInputStream)) {
             XSSFSheet workSheet = workBook.getSheetAt(0);
 
@@ -371,12 +417,41 @@ public class UsuarioController {
                 usuario.setTelefono(row.getCell(8).toString());
                 usuario.setCelular(row.getCell(9).toString());
                 usuario.setCURP(row.getCell(10).toString());
-                usuario.getRol().setIdRol((int)row.getCell(11).getNumericCellValue());
-                
+                usuario.setImagen(row.getCell(11).toString());
+                usuario.getRol().setIdRol((int) row.getCell(12).getNumericCellValue());
+
+                Direccion direccion = new Direccion();
+
+                direccion.setCalle(row.getCell(13).toString());
+                direccion.setNumeroInterior(row.getCell(14).toString());
+                direccion.setNumeroExterior(row.getCell(15).toString());
+
+                Colonia colonia = new Colonia();
+                colonia.setNombre(row.getCell(16).toString());
+                colonia.setCodigoPostal(row.getCell(17).toString());
+
+                Municipio municipio = new Municipio();
+                municipio.setNombre(row.getCell(18).toString());
+
+                Estado estado = new Estado();
+                estado.setNombre(row.getCell(19).toString());
+
+                Pais pais = new Pais();
+                pais.setNombre(row.getCell(20).toString());
+
+                estado.setPais(pais);
+                municipio.setEstado(estado);
+                colonia.setMunicipio(municipio);
+                direccion.setColonia(colonia);
+
+                usuario.setDirecciones(new ArrayList<>());
+                usuario.getDirecciones().add(direccion);
+
                 usuarios.add(usuario);
             }
 
         } catch (Exception ex) {
+
             return null;
         }
 

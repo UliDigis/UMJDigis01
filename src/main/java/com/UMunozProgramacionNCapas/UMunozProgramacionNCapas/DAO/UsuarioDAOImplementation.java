@@ -33,10 +33,10 @@ public class UsuarioDAOImplementation implements IUsuarioDAO {
         Result result = new Result();
 
         try {
-            jdbcTemplate.batchUpdate("{CALL AddUsuario2(?,?,?,?,?,?,?,?,?,?,?,?)}",
+            jdbcTemplate.batchUpdate("{CALL AddUsuarioDireccion(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}",
                     usuarios, usuarios.size(), (callableSP, usuario) -> {
 
-                //usuario.setRol(new Rol());
+                
 
                 callableSP.setString(1, usuario.getUserName());
                 callableSP.setString(2, usuario.getNombre());
@@ -49,7 +49,19 @@ public class UsuarioDAOImplementation implements IUsuarioDAO {
                 callableSP.setString(9, usuario.getTelefono());
                 callableSP.setString(10, usuario.getCelular());
                 callableSP.setString(11, usuario.getCURP());
-                callableSP.setInt(12, usuario.getRol().getIdRol());
+                callableSP.setString(12, usuario.getImagen());
+                callableSP.setInt(13, usuario.getRol().getIdRol());
+                
+                Direccion direccion = usuario.getDirecciones().get(0);
+                
+                callableSP.setString(14, direccion.getCalle());
+                callableSP.setString(15, direccion.getNumeroInterior());
+                callableSP.setString(16, direccion.getNumeroExterior());
+                callableSP.setString(17, direccion.getColonia().getNombre());
+                callableSP.setString(18,direccion.getColonia().getCodigoPostal());
+                callableSP.setString(19,direccion.getColonia().getMunicipio().getNombre());
+                callableSP.setString(20, direccion.getColonia().getMunicipio().getEstado().getNombre());
+                callableSP.setString(21,direccion.getColonia().getMunicipio().getEstado().getPais().getNombre());
                 
 
             });
