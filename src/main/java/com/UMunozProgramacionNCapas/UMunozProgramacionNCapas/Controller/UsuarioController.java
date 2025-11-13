@@ -175,7 +175,7 @@ public class UsuarioController {
             }
         }
 
-        Result result = usuarioDAOImplementation.Add(usuario);
+        Result result = usuarioJPADAOImplementation.AddUsuarioJPA(usuario);
 
         if (result.Correct) {
             return "redirect:/Usuario/GetAll";

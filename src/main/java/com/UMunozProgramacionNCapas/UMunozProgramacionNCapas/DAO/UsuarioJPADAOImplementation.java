@@ -1,5 +1,6 @@
 package com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO;
 
+import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.JPA.DireccionJPA;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Result;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Usuario;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Rol;
@@ -66,6 +67,12 @@ public class UsuarioJPADAOImplementation implements IUsuarioJPA {
         
         try{
             UsuarioJPA usuarioJPA = usuarioMapper.toEntity(usuario);
+            
+            if (usuarioJPA.getDirecciones().get(0) == null){
+                for(DireccionJPA direccion : usuarioJPA.getDirecciones()){
+                    direccion.setUsuario(usuarioJPA);
+                }
+            }
             
             entityManager.persist(usuarioJPA);
             entityManager.flush();
