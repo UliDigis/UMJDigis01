@@ -2,9 +2,10 @@ package com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO;
 
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Result;
 
-public interface IEstadoJPA {
-    
+public interface IMunicipioJPA {
+
     Result GetAll();
-    Result GetByPais(int IdPais);
+    
+    Result GetByEstado(int IdEstado);
     
 }

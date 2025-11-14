@@ -13,14 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class EstadoJPADAOImplementation {
+public class EstadoJPADAOImplementation implements IEstadoJPA{
 
     @Autowired
     private EntityManager entityManager;
     private EstadoMapper estadoMapper;
     
+    Result result = new Result();
     public Result GetAll(){
-        Result result = new Result();
+        
         
         try{
             
@@ -31,13 +32,39 @@ public class EstadoJPADAOImplementation {
             
             for(EstadoJPA resultEstadoJPA : estadoJPA){
                 Estado estado = estadoMapper.toModel(resultEstadoJPA);
+                result.Objects.add(estado);
             }
+            result.Correct = true;
             
             
         }catch(Exception ex){
-            
+            result.Correct = false;
+            result.ErrorMessage = ex.getLocalizedMessage();
+            result.Objects = null;
         }
         
+        return result;
+    }
+    
+    public Result GetByPais(int IdPais){
+        
+        try{
+            
+        TypedQuery<EstadoJPA> queryEstado = entityManager.createQuery("FROM EstadoJPA e WHERE e.Pais.IdPais = :IdPais", EstadoJPA.class);
+        queryEstado.setParameter("IdPais", IdPais);
+        
+        List<EstadoJPA> estadoJPA = queryEstado.getResultList();
+        
+        result.Object = new ArrayList<>();
+        for( EstadoJPA resultEstadoJPA : estadoJPA){
+        Estado estado = estadoMapper.toModel(resultEstadoJPA);
+        result.Objects.add(estado);
+        }       
+        result.Correct = true;
+        }catch(Exception ex){
+            result.Correct = false;
+            result.ErrorMessage = ex.getLocalizedMessage();
+        }
         return result;
     }
     

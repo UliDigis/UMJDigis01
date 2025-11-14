@@ -1,8 +1,11 @@
 package com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.Controller;
 
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.ColoniaDAOImplementation;
+import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.ColoniaJPADAOImplementation;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.EstadoDAOImplementation;
+import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.EstadoJPADAOImplementation;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.MunicipioDAOImplementation;
+import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.MunicipioJPADAOImplementation;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.PaisDAOImplementation;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.PaisJPADAOImplementation;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.RolDAOImplementation;
@@ -60,15 +63,25 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioDAOImplementation usuarioDAOImplementation;
-    private PaisDAOImplementation paisDAOImplementation;
-    private EstadoDAOImplementation estadoDAOImplementation;
-    private MunicipioDAOImplementation municipioDAOImplementation;
-    private ColoniaDAOImplementation coloniaDAOImplementation;
+//    private PaisDAOImplementation paisDAOImplementation;
+//    private EstadoDAOImplementation estadoDAOImplementation;
+//    private MunicipioDAOImplementation municipioDAOImplementation;
+//    private ColoniaDAOImplementation coloniaDAOImplementation;
+    @Autowired
     private ValidationService validationService;
-    private RolDAOImplementation rolDAOImplementation;
+//    private RolDAOImplementation rolDAOImplementation;
+    @Autowired
     private UsuarioJPADAOImplementation usuarioJPADAOImplementation;
+    @Autowired
     private RolJPADAOImplementation rolJPADAOImplementation;
+    @Autowired
     private PaisJPADAOImplementation paisJPADAOImplementation;
+    @Autowired
+    private EstadoJPADAOImplementation estadoJPADAOImplementation;
+    @Autowired
+    private MunicipioJPADAOImplementation municipioJPADAOImplementation;
+    @Autowired
+    private ColoniaJPADAOImplementation coloniaJPADAOImplementation;
 
     // --------- IdUsuario ----------
     @GetMapping("detail/{idUsuario}")
@@ -87,7 +100,7 @@ public class UsuarioController {
     @ResponseBody
     public Result GetEstadosByPais(@PathVariable int IdPais) {
 
-        Result result = estadoDAOImplementation.GetEstadoByPais(IdPais);
+        Result result = estadoJPADAOImplementation.GetByPais(IdPais);
 
         return result;
     }
@@ -98,7 +111,7 @@ public class UsuarioController {
     @ResponseBody
     public Result GetMunicipioByEstado(@PathVariable int IdEstado) {
 
-        Result result = municipioDAOImplementation.GetMunicipioByEstado(IdEstado);
+        Result result = municipioJPADAOImplementation.GetByEstado(IdEstado);
 
         return result;
     }
@@ -109,7 +122,7 @@ public class UsuarioController {
     @ResponseBody
     public Result GetColoniaByMunicipio(@PathVariable int IdMunicipio) {
 
-        Result result = coloniaDAOImplementation.GetColoniaByMunicipio(IdMunicipio);
+        Result result = coloniaJPADAOImplementation.GetByMunicipio(IdMunicipio);
 
         return result;
 
