@@ -4,7 +4,9 @@ import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.ColoniaDAOImple
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.EstadoDAOImplementation;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.MunicipioDAOImplementation;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.PaisDAOImplementation;
+import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.PaisJPADAOImplementation;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.RolDAOImplementation;
+import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.RolJPADAOImplementation;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.UsuarioDAOImplementation;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.DAO.UsuarioJPADAOImplementation;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Colonia;
@@ -58,27 +60,15 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioDAOImplementation usuarioDAOImplementation;
-
-    @Autowired
     private PaisDAOImplementation paisDAOImplementation;
-
-    @Autowired
     private EstadoDAOImplementation estadoDAOImplementation;
-
-    @Autowired
     private MunicipioDAOImplementation municipioDAOImplementation;
-
-    @Autowired
     private ColoniaDAOImplementation coloniaDAOImplementation;
-
-    @Autowired
     private ValidationService validationService;
-
-    @Autowired
     private RolDAOImplementation rolDAOImplementation;
-
-    @Autowired
     private UsuarioJPADAOImplementation usuarioJPADAOImplementation;
+    private RolJPADAOImplementation rolJPADAOImplementation;
+    private PaisJPADAOImplementation paisJPADAOImplementation;
 
     // --------- IdUsuario ----------
     @GetMapping("detail/{idUsuario}")
@@ -139,9 +129,9 @@ public class UsuarioController {
         direccion.setColonia(colonia);
 
         usuario.setDirecciones(new ArrayList<>(Arrays.asList(direccion)));
-        Result resulRol = rolDAOImplementation.GetAll();
+        Result resulRol = rolJPADAOImplementation.GetAll();
         model.addAttribute("roles", resulRol.Objects);
-        model.addAttribute("Paises", paisDAOImplementation.GetAll().Objects);
+        model.addAttribute("Paises", paisJPADAOImplementation.GetAll().Objects);
         model.addAttribute("Usuario", usuario);
         
 
@@ -191,7 +181,7 @@ public class UsuarioController {
     @GetMapping("/GetAll")
     public String GetAll(Model model) {
 //        Result result = usuarioDAOImplementation.GetAll();
-        Result resultRol = rolDAOImplementation.GetAll();
+        Result resultRol = rolJPADAOImplementation.GetAll();
         Result resultJPA = usuarioJPADAOImplementation.GetAllJPA();
         model.addAttribute("roles", resultRol.Objects);
         model.addAttribute("usuarios", resultJPA.Objects);

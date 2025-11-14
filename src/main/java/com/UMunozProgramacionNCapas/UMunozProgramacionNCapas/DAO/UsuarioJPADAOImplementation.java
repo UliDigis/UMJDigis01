@@ -36,8 +36,8 @@ public class UsuarioJPADAOImplementation implements IUsuarioJPA {
 
             result.Objects = new ArrayList<>();
 
-            for (UsuarioJPA usuarioJPA : usuariosJPA) {
-                Usuario usuario = usuarioMapper.toModel(usuarioJPA);
+            for (UsuarioJPA resultUsuarioJPA : usuariosJPA) {
+                Usuario usuario = usuarioMapper.toModel(resultUsuarioJPA);
 
                 if (usuario.rol == null) {
                     usuario.rol = new Rol();

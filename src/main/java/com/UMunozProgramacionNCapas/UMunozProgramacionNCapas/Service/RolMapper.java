@@ -1,49 +1,51 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.Service;
 
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.JPA.RolJPA;
-import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.JPA.UsuarioJPA;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Result;
 import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Rol;
-import com.UMunozProgramacionNCapas.UMunozProgramacionNCapas.ML.Usuario;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UsuarioMapper {
-
+public class RolMapper {
+    
     @Autowired
-    private ModelMapper modelMapper;
+    private ModelMapper modelMapper;        
+    
     Result result = new Result();
-
-    //ML aJPA
-    public Usuario toModel(UsuarioJPA usuarioJPA) {
+    
+    public Rol toModel(RolJPA rolJPA) {
 
         try {
-            return modelMapper.map(usuarioJPA, Usuario.class);
-        } catch (Exception ex) {
             
-            result.ErrorMessage = ex.getLocalizedMessage();
-            result.ex = ex;
-            return null;
-        }
-
-    }
-
-    //ML a JPA
-    public UsuarioJPA toEntity(Usuario usuarioML) {
-
-        try {
-
-            return modelMapper.map(usuarioML, UsuarioJPA.class);
-
+            return modelMapper.map(rolJPA, Rol.class);
+            
         } catch (Exception ex) {
-
+            result.Correct = false;
             result.ErrorMessage = ex.getLocalizedMessage();
             result.ex = ex;
             return null;
         }
 
     }
-
+    
+    public RolJPA toEntity(Rol rol){
+        
+        try{
+            
+            return modelMapper.map(rol,RolJPA.class);
+            
+        }catch(Exception ex){
+            result.Correct = false;
+            result.ErrorMessage = ex.getLocalizedMessage();
+            result.ex = ex;
+            return null;
+        }
+    }
+    
 }
